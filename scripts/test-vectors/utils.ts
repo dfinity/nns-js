@@ -98,3 +98,17 @@ export const writeToJson = ({
     console.log(error);
   }
 };
+
+export const splitPrincipal = (principal: Principal): string[] => {
+  const text = principal.toText();
+  const split = text.split("-");
+  const groupedInThrees = [];
+  for (let i = 0; i < split.length; i += 3) {
+    groupedInThrees.push(split.slice(i, i + 3).join("-"));
+  }
+  const lines = [];
+  for (let i = 0; i < groupedInThrees.length; i += 2) {
+    lines.push(groupedInThrees.slice(i, i + 2).join(" : "));
+  }
+  return lines;
+};
