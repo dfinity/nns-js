@@ -411,3 +411,8 @@ export const ManageNeuronFn = IDL.Func(
   [ManageNeuronResponse],
   [],
 );
+export const ListNeuronsFn = IDL.Func(
+  [ListNeurons],
+  [ListNeuronsResponse],
+  ["query"]
+);
