@@ -1,5 +1,4 @@
 import {
-  AnonymousIdentity,
   CallRequest,
   Cbor,
   Expiry,
@@ -51,10 +50,11 @@ const createCallRequest = ({
   canister_id: MAINNET_GOVERNANCE_CANISTER_ID,
   method_name: methodName,
   arg,
-  sender: new AnonymousIdentity().getPrincipal(),
-  // sender: Principal.fromText(
-  //   "q2fbu-chrgb-o7dmd-u5cfn-xgo4f-5lpcl-ldeca-wl4sn-5j7gb-ltm63-hqe"
-  // ),
+  // sender: new AnonymousIdentity().getPrincipal(),
+  // Use this principal to match the principal used in Zondax integration tests.
+  sender: Principal.fromText(
+    "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe"
+  ),
   ingress_expiry: new Expiry(DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS),
 });
 
