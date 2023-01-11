@@ -1,6 +1,6 @@
 import { IDL } from "@dfinity/candid";
-import { NeuronId } from "../../packages/nns/src";
-import { toStopDissolvingRequest } from "../../packages/nns/src/canisters/governance/request.converters";
+import { NeuronId } from "@dfinity/nns/src";
+import { toStopDissolvingRequest } from "@dfinity/nns/src/canisters/governance/request.converters";
 import { ManageNeuronFn } from "./governance.idl";
 import { createBlob, writeToJson } from "./utils";
 

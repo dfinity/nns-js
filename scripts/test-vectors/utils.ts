@@ -42,12 +42,14 @@ const DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS = 5 * 60 * 1000;
 const createCallRequest = ({
   arg,
   methodName,
+  canisterId,
 }: {
   arg: ArrayBuffer;
   methodName: string;
+  canisterId?: Principal;
 }): CallRequest => ({
   request_type: SubmitRequestType.Call,
-  canister_id: MAINNET_GOVERNANCE_CANISTER_ID,
+  canister_id: canisterId ?? MAINNET_GOVERNANCE_CANISTER_ID,
   method_name: methodName,
   arg,
   // sender: new AnonymousIdentity().getPrincipal(),
@@ -61,9 +63,11 @@ const createCallRequest = ({
 export const createBlob = ({
   arg,
   methodName,
+  canisterId,
 }: {
   arg: ArrayBuffer;
   methodName: string;
+  canisterId?: Principal;
 }): string => {
   const callRequestCandid = createCallRequest({
     arg,

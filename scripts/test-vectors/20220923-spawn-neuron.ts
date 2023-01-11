@@ -2,9 +2,9 @@
 // https://github.com/Zondax/ledger-icp/issues/166
 // We'll keep each script for reproducibility.
 import { IDL } from "@dfinity/candid";
+import { NeuronId } from "@dfinity/nns/src";
+import { toSpawnNeuronRequest } from "@dfinity/nns/src/canisters/governance/request.converters";
 import { Principal } from "@dfinity/principal";
-import { NeuronId } from "../../packages/nns/src";
-import { toSpawnNeuronRequest } from "../../packages/nns/src/canisters/governance/request.converters";
 import { ManageNeuronFn } from "./governance.idl";
 import { createBlob, splitPrincipal, writeToJson } from "./utils";
 
