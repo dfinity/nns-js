@@ -8,6 +8,7 @@ import {
 import { Principal } from "@dfinity/principal";
 import { writeFileSync } from "fs";
 import { MAINNET_GOVERNANCE_CANISTER_ID } from "../../packages/nns/src/constants/canister_ids";
+import { SnsNeuronPermissionType } from "../../packages/sns/src/enums/governance.enums";
 
 /**
  * Changes needed to match the `arg` inside the blob_proto with the Hardware Wallet CLI blob.
@@ -39,6 +40,10 @@ function _prepareCborForLedger(
 // Default delta for ingress expiry is 5 minutes.
 const DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS = 5 * 60 * 1000;
 
+export const caller = Principal.fromText(
+  "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe"
+);
+
 const createCallRequest = ({
   arg,
   methodName,
@@ -54,9 +59,7 @@ const createCallRequest = ({
   arg,
   // sender: new AnonymousIdentity().getPrincipal(),
   // Use this principal to match the principal used in Zondax integration tests.
-  sender: Principal.fromText(
-    "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe"
-  ),
+  sender: caller,
   ingress_expiry: new Expiry(DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS),
 });
 
@@ -116,3 +119,56 @@ export const splitPrincipal = (principal: Principal): string[] => {
   }
   return lines;
 };
+
+export const splitString = (
+  textToSplit: string,
+  screenText: string
+): string[] => {
+  return (
+    textToSplit
+      .match(/.{1,6}/g)
+      ?.reduce((acc, curr) => {
+        if (acc.length === 0) {
+          return [curr];
+        }
+        const lastItem = acc[acc.length - 1];
+        if (lastItem.length > 18) {
+          return [...acc, curr];
+        } else if (lastItem.length < 18) {
+          return [...acc.slice(0, -1), `${lastItem} : ${curr}`];
+        }
+        return acc;
+      }, [] as string[])
+      ?.map(
+        (data, i, elements) =>
+          `${screenText} [${i + 1}/${elements.length}] : ${data}`
+      ) || []
+  );
+};
+
+export const permissionMapper: Record<SnsNeuronPermissionType, string> = {
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_VOTE]: "Vote",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_SUBMIT_PROPOSAL]:
+    "Submit Proposal",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_CONFIGURE_DISSOLVE_STATE]:
+    "Configure Dissolve State",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_DISBURSE]: "Disburse Neuron",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_DISBURSE_MATURITY]:
+    "Disburse Maturity",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_MANAGE_PRINCIPALS]:
+    "Manage Principals",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_MANAGE_VOTING_PERMISSION]:
+    "Manage Voting Permission",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_SPLIT]: "Split Neuron",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_STAKE_MATURITY]:
+    "Stake Maturity",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_UNSPECIFIED]: "Unspecified",
+  [SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_MERGE_MATURITY]:
+    "Merge Maturity",
+};
+
+export const bytesToHexString = (bytes: number[]): string =>
+  bytes.reduce(
+    (str, byte) => `${str}${byte.toString(16).padStart(2, "0")}`,
+    ""
+  );

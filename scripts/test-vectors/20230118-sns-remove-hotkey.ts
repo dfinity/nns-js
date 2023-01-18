@@ -1,7 +1,7 @@
 import { IDL } from "@dfinity/candid";
 import { Principal } from "@dfinity/principal";
 import { SnsNeuronPermissionsParams } from "@dfinity/sns/src";
-import { toAddPermissionsRequest } from "@dfinity/sns/src/converters/governance.converters";
+import { toRemovePermissionsRequest } from "@dfinity/sns/src/converters/governance.converters";
 import { SnsNeuronPermissionType } from "@dfinity/sns/src/enums/governance.enums";
 import { arrayOfNumberToUint8Array } from "@dfinity/utils";
 import { ManageNeuronFn } from "./sns-governance.idl";
@@ -10,6 +10,7 @@ import {
   createBlob,
   permissionMapper,
   splitPrincipal,
+  splitString,
   writeToJson,
 } from "./utils";
 
@@ -22,39 +23,21 @@ interface Params extends SnsNeuronPermissionsParams {
 }
 
 const createTestVector = (params: Params) => {
-  const rawRequestBody = toAddPermissionsRequest(params);
+  const rawRequestBody = toRemovePermissionsRequest(params);
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
     (data, i, elements) => `Canister Id [${i + 1}/${elements.length}] : ${data}`
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
-  const neuronIdOutputs =
-    neuronIdString
-      .match(/.{1,6}/g)
-      ?.reduce((acc, curr) => {
-        if (acc.length === 0) {
-          return [curr];
-        }
-        const lastItem = acc[acc.length - 1];
-        if (lastItem.length > 18) {
-          return [...acc, curr];
-        } else if (lastItem.length < 18) {
-          return [...acc.slice(0, -1), `${lastItem} : ${curr}`];
-        }
-        return acc;
-      }, [] as string[])
-      ?.map(
-        (data, i, elements) =>
-          `Neuron Id [${i + 1}/${elements.length}] : ${data}`
-      ) || [];
+  const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");
   const principalOutputs = splitPrincipal(params.principal).map(
     (data, i, elements) =>
       `Principal Id [${i + 1}/${elements.length}] : ${data}`
   );
   const permissionOutputs = params.permissions.map(
-    (p) => `Add Permission : ${permissionMapper[p]}`
+    (p) => `Remove Permission : ${permissionMapper[p]}`
   );
   const output = [
-    "Transaction type : Add Neuron Permissions",
+    "Transaction type : Remove Neuron Permissions",
     ...canisterIdOutputs,
     ...neuronIdOutputs,
     ...principalOutputs,
@@ -68,7 +51,7 @@ const createTestVector = (params: Params) => {
     }),
     output: output.map((element, index) => `${index + 1} | ${element}`),
     neuronIdString: neuronIdString,
-    name: "Add Neuron Permissions",
+    name: "Remove Neuron Permissions",
     canisterId: params.canisterId.toText(),
     candid_request: rawRequestBody,
   };
@@ -153,7 +136,7 @@ const main = () => {
 
     writeToJson({
       data: vectors,
-      fileName: "sns-add-neuron-permissions.json",
+      fileName: "sns-remove-neuron-permissions.json",
     });
     console.log("File created successfully");
   } catch (error) {
