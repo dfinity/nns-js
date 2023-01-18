@@ -15,7 +15,7 @@ import {
 } from "./utils";
 
 /**
- * ISSUE: https://github.com/Zondax/ledger-icp/issues/187
+ * Issue: https://github.com/Zondax/ledger-icp/issues/188
  */
 
 interface Params extends SnsNeuronPermissionsParams {
