@@ -12,8 +12,8 @@ import { arrayOfNumberToUint8Array } from "@dfinity/utils";
 import { ManageNeuronFn } from "./sns-governance.idl";
 import {
   bytesToHexString,
-  caller,
   createBlob,
+  defaultCaller,
   splitPrincipal,
   splitString,
   writeToJson,
@@ -35,7 +35,7 @@ const createDisburseVector = (params: DisburseParams) => {
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");
   const disburseToAccountStr = encodeSnsAccount({
-    owner: caller,
+    owner: defaultCaller,
   });
   const disburseToOutputs = splitString(disburseToAccountStr, "Disburse to");
   const amount = params.amount

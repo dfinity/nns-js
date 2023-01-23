@@ -6,6 +6,8 @@ import {
   SubmitRequestType,
 } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
+import type { SnsAccount } from "@dfinity/sns/src";
+import { encodeSnsAccount } from "@dfinity/sns/src/utils/ledger.utils";
 import { writeFileSync } from "fs";
 import { MAINNET_GOVERNANCE_CANISTER_ID } from "../../packages/nns/src/constants/canister_ids";
 import { SnsNeuronPermissionType } from "../../packages/sns/src/enums/governance.enums";
@@ -40,7 +42,7 @@ function _prepareCborForLedger(
 // Default delta for ingress expiry is 5 minutes.
 const DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS = 5 * 60 * 1000;
 
-export const caller = Principal.fromText(
+export const defaultCaller = Principal.fromText(
   "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe"
 );
 
@@ -48,18 +50,19 @@ const createCallRequest = ({
   arg,
   methodName,
   canisterId,
+  caller,
 }: {
   arg: ArrayBuffer;
   methodName: string;
   canisterId?: Principal;
+  caller?: Principal;
 }): CallRequest => ({
   request_type: SubmitRequestType.Call,
   canister_id: canisterId ?? MAINNET_GOVERNANCE_CANISTER_ID,
   method_name: methodName,
   arg,
-  // sender: new AnonymousIdentity().getPrincipal(),
   // Use this principal to match the principal used in Zondax integration tests.
-  sender: caller,
+  sender: caller ?? defaultCaller,
   ingress_expiry: new Expiry(DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS),
 });
 
@@ -67,14 +70,18 @@ export const createBlob = ({
   arg,
   methodName,
   canisterId,
+  caller,
 }: {
   arg: ArrayBuffer;
   methodName: string;
   canisterId?: Principal;
+  caller?: Principal;
 }): string => {
   const callRequestCandid = createCallRequest({
     arg,
     methodName,
+    caller,
+    canisterId,
   });
   const candidBlob = _prepareCborForLedger(callRequestCandid);
   return Buffer.from(candidBlob).toString("hex");
@@ -126,7 +133,7 @@ export const splitString = (
 ): string[] => {
   return (
     textToSplit
-      .match(/.{1,6}/g)
+      .match(/.{1,8}/g)
       ?.reduce((acc, curr) => {
         if (acc.length === 0) {
           return [curr];
@@ -143,6 +150,16 @@ export const splitString = (
         (data, i, elements) =>
           `${screenText} [${i + 1}/${elements.length}] : ${data}`
       ) || []
+  );
+};
+
+export const splitAccount = (
+  account: SnsAccount,
+  screenText: string
+): string[] => {
+  return splitPrincipal(Principal.fromText(encodeSnsAccount(account))).map(
+    (data, i, elements) =>
+      `${screenText} [${i + 1}/${elements.length}] : ${data}`
   );
 };
 
