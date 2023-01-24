@@ -20,7 +20,19 @@ import {
 } from "./utils";
 
 /**
- * Issue: PENDING
+ * Issue: https://github.com/Zondax/ledger-icp/issues/190
+ */
+
+/**
+ * Specific business logic.
+ *
+ * - When is ICP and when not.
+ * - Convert memo to bigint.
+ * - When to show fee and when not.
+ * - Default fee for ICP.
+ * - Textual representation of accounts.
+ * - How to create the "source" account.
+ * - When to show "ICP" and when "Tokens".
  */
 
 interface Params extends TransferParams {
@@ -29,7 +41,7 @@ interface Params extends TransferParams {
 }
 
 // Fee is optional, if not provided, it will be set to 10000 which is the ICP fee
-const icpFeeE8s = 10000;
+const ICP_DEFAULT_FEE_E8S = 10_000;
 
 const createTestVector = (params: Params) => {
   const rawRequestBody = toTransferArg(params);
@@ -60,10 +72,18 @@ const createTestVector = (params: Params) => {
   const paymentOutput = isICP
     ? `Payment (ICP) : ${amountToken}`
     : `Payment (Tokens) : ${amountToken}`;
-  const feeToken = Number(params.fee ?? icpFeeE8s) / Number(E8S_PER_TOKEN);
-  const feeOutput = isICP
-    ? `Maximum fee (ICP) : ${feeToken}`
-    : `Maximum fee (Tokens) : ${feeToken}`;
+
+  // Do not show fee if it's not present in the request body.
+  // Except if it's ICP, in which case we always show the fee.
+  let feeOutput: string | undefined;
+  if (isICP || params.fee !== undefined) {
+    const feeToken =
+      Number(params.fee ?? ICP_DEFAULT_FEE_E8S) / Number(E8S_PER_TOKEN);
+    feeOutput = isICP
+      ? `Maximum fee (ICP) : ${feeToken}`
+      : `Maximum fee (Tokens) : ${feeToken}`;
+  }
+
   const memoOutput =
     params.memo !== undefined
       ? `Memo : ${uint8ArrayToBigInt(params.memo).toString()}`
@@ -75,7 +95,7 @@ const createTestVector = (params: Params) => {
     ...fromOutputs,
     ...toOutputs,
     paymentOutput,
-    feeOutput,
+    ...(feeOutput !== undefined ? [feeOutput] : []),
     memoOutput,
   ];
   return {
