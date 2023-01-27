@@ -5,9 +5,9 @@ import {
   ReadRequest,
   SubmitRequestType,
 } from "@dfinity/agent";
+import { IcrcAccount } from "@dfinity/ledger/src/types/ledger.responses";
+import { encodeIcrcAccount } from "@dfinity/ledger/src/utils/ledger.utils";
 import { Principal } from "@dfinity/principal";
-import type { SnsAccount } from "@dfinity/sns/src";
-import { encodeSnsAccount } from "@dfinity/sns/src/utils/ledger.utils";
 import { writeFileSync } from "fs";
 import { MAINNET_GOVERNANCE_CANISTER_ID } from "../../packages/nns/src/constants/canister_ids";
 import { SnsNeuronPermissionType } from "../../packages/sns/src/enums/governance.enums";
@@ -154,10 +154,10 @@ export const splitString = (
 };
 
 export const splitAccount = (
-  account: SnsAccount,
+  account: IcrcAccount,
   screenText: string
 ): string[] => {
-  return splitPrincipal(Principal.fromText(encodeSnsAccount(account))).map(
+  return splitPrincipal(Principal.fromText(encodeIcrcAccount(account))).map(
     (data, i, elements) =>
       `${screenText} [${i + 1}/${elements.length}] : ${data}`
   );

@@ -1,4 +1,5 @@
 import { IDL } from "@dfinity/candid";
+import { encodeIcrcAccount } from "@dfinity/ledger/src/utils/ledger.utils";
 import { E8S_PER_TOKEN } from "@dfinity/nns/src/constants/constants";
 import { Principal } from "@dfinity/principal";
 import { SnsDisburseNeuronParams, SnsNeuronId } from "@dfinity/sns/src";
@@ -7,7 +8,6 @@ import {
   toStartDissolvingNeuronRequest,
   toStopDissolvingNeuronRequest,
 } from "@dfinity/sns/src/converters/governance.converters";
-import { encodeSnsAccount } from "@dfinity/sns/src/utils/ledger.utils";
 import { arrayOfNumberToUint8Array } from "@dfinity/utils";
 import { ManageNeuronFn } from "./sns-governance.idl";
 import {
@@ -34,9 +34,11 @@ const createDisburseVector = (params: DisburseParams) => {
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");
-  const disburseToAccountStr = encodeSnsAccount({
-    owner: defaultCaller,
-  });
+  const disburseToAccountStr = encodeIcrcAccount(
+    params.toAccount ?? {
+      owner: defaultCaller,
+    }
+  );
   const disburseToOutputs = splitString(disburseToAccountStr, "Disburse to");
   const amount = params.amount
     ? Number(params.amount) / Number(E8S_PER_TOKEN)
