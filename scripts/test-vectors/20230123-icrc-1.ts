@@ -1,8 +1,8 @@
 import { IDL } from "@dfinity/candid";
+import { toTransferArg } from "@dfinity/ledger/src/converters/ledger.converters";
+import { TransferParams } from "@dfinity/ledger/src/types/ledger.params";
 import { E8S_PER_TOKEN } from "@dfinity/nns/src/constants/constants";
 import { Principal } from "@dfinity/principal";
-import { toTransferArg } from "@dfinity/sns/src/converters/ledger.converters";
-import { TransferParams } from "@dfinity/sns/src/types/ledger.params";
 import {
   arrayOfNumberToUint8Array,
   fromNullable,
