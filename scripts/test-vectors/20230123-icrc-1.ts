@@ -177,6 +177,7 @@ const main = () => {
         memo: numberToUint8Array(11223312),
         fee: BigInt(30_000),
         canisterId: canisterId2,
+        created_at_time: BigInt(1675249266635000000),
       }),
       createTestVector({
         owner: principal2,
@@ -187,6 +188,7 @@ const main = () => {
         amount: BigInt(314_000_000),
         memo: numberToUint8Array(11223312),
         canisterId: canisterId1,
+        created_at_time: BigInt(1675249266635000000),
       }),
       createTestVector({
         owner: principal2,
@@ -199,6 +201,7 @@ const main = () => {
         from_subaccount: subaccount2,
         fee: BigInt(20_000),
         canisterId: canisterId1,
+        created_at_time: BigInt(1675249266635000000),
       }),
       createTestVector({
         owner: principal1,
@@ -227,6 +230,7 @@ const main = () => {
         amount: BigInt(31_400_000),
         from_subaccount: subaccount2,
         canisterId: MAINNET_LEDGER_CANISTER_ID,
+        created_at_time: BigInt(1675249266635000000),
       }),
       createTestVector({
         owner: principal2,
@@ -237,6 +241,7 @@ const main = () => {
         amount: BigInt(31_400_000),
         memo: numberToUint8Array(11223312),
         canisterId: MAINNET_LEDGER_CANISTER_ID,
+        created_at_time: BigInt(1675249266635000000),
       }),
       createTestVector({
         owner: principal2,
@@ -261,6 +266,19 @@ const main = () => {
         memo: numberToUint8Array(11223312),
         canisterId: MAINNET_LEDGER_CANISTER_ID,
         created_at_time: BigInt(1629200000000000000),
+      }),
+      createTestVector({
+        owner: principal2,
+        to: {
+          owner: principal1,
+          subaccount: [subaccount1],
+        },
+        amount: BigInt(131_400_000),
+        fee: BigInt(30_000),
+        from_subaccount: subaccount2,
+        memo: numberToUint8Array(11223312),
+        canisterId: MAINNET_LEDGER_CANISTER_ID,
+        created_at_time: BigInt(1675249266635000000),
       }),
     ];
 
