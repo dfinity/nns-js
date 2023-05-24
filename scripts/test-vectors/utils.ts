@@ -157,10 +157,7 @@ export const splitAccount = (
   account: IcrcAccount,
   screenText: string
 ): string[] => {
-  return splitPrincipal(Principal.fromText(encodeIcrcAccount(account))).map(
-    (data, i, elements) =>
-      `${screenText} [${i + 1}/${elements.length}] : ${data}`
-  );
+  return splitString(encodeIcrcAccount(account), screenText);
 };
 
 export const permissionMapper: Record<SnsNeuronPermissionType, string> = {
