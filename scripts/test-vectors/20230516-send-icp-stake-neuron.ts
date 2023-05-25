@@ -74,7 +74,7 @@ const createSendIcpVector = ({
   fee: bigint;
   fromSubAccount?: number[];
   createdAt?: bigint;
-  caller?: Principal;
+  caller: Principal;
   randomBytes?: Uint8Array;
 }) => {
   const isStakeNeuron = to === undefined;
@@ -82,10 +82,7 @@ const createSendIcpVector = ({
   let nonce;
   if (randomBytes !== undefined) {
     nonce = uint8ArrayToBigInt(randomBytes);
-    const toSubAccount = buildNeuronStakeSubAccount(
-      randomBytes,
-      MAINNET_GOVERNANCE_CANISTER_ID
-    );
+    const toSubAccount = buildNeuronStakeSubAccount(randomBytes, caller);
     accountIdentifier = AccountIdentifier.fromPrincipal({
       principal: MAINNET_GOVERNANCE_CANISTER_ID,
       subAccount: toSubAccount,
@@ -133,12 +130,14 @@ const main = () => {
     const vectors = [
       createSendIcpVector({
         to: account1,
+        caller: defaultCaller,
         amount: BigInt(1_000_000_000),
         fee: BigInt(10_000),
         memo: BigInt(0),
       }),
       createSendIcpVector({
         to: account2,
+        caller: defaultCaller,
         amount: BigInt(333_000_000_000),
         fee: BigInt(10_000),
         memo: BigInt(0),
@@ -146,6 +145,7 @@ const main = () => {
       }),
       createSendIcpVector({
         to: account2,
+        caller: defaultCaller,
         amount: BigInt(1_432_222_000),
         fee: BigInt(10_000),
         memo: BigInt(0),
@@ -169,6 +169,7 @@ const main = () => {
       }),
       createSendIcpVector({
         to: account1,
+        caller: defaultCaller,
         amount: BigInt(1_000_000_000),
         fee: BigInt(10_000),
         memo: BigInt(12123242222),
@@ -177,6 +178,7 @@ const main = () => {
       }),
       createSendIcpVector({
         to: account2,
+        caller: defaultCaller,
         amount: BigInt(100_000_000_000),
         fee: BigInt(20_000),
         memo: BigInt(9984628273),
@@ -185,18 +187,21 @@ const main = () => {
       createSendIcpVector({
         amount: BigInt(100_000_000_000),
         fee: BigInt(10_000),
+        caller: defaultCaller,
         fromSubAccount: subaccount1,
         randomBytes: randomBytes1,
       }),
       createSendIcpVector({
         amount: BigInt(100_000_000_000),
         fee: BigInt(10_000),
+        caller: defaultCaller,
         fromSubAccount: subaccount2,
         randomBytes: randomBytes2,
       }),
       createSendIcpVector({
         amount: BigInt(230_000_000_000),
         fee: BigInt(10_000),
+        caller: defaultCaller,
         createdAt: createdAt1,
         randomBytes: randomBytes3,
       }),
