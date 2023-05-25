@@ -4,9 +4,14 @@ import {
   SubAccount,
 } from "@dfinity/nns/src/account_identifier";
 import { toTransferRawRequest } from "@dfinity/nns/src/canisters/ledger/ledger.request.converts";
-import { MAINNET_LEDGER_CANISTER_ID } from "@dfinity/nns/src/constants/canister_ids";
+import {
+  MAINNET_GOVERNANCE_CANISTER_ID,
+  MAINNET_LEDGER_CANISTER_ID,
+} from "@dfinity/nns/src/constants/canister_ids";
 import { Principal } from "@dfinity/principal";
+import { asciiStringToByteArray, uint8ArrayToBigInt } from "@dfinity/utils";
 import { arrayOfNumberToUint8Array } from "@dfinity/utils/src";
+import { sha256 } from "js-sha256";
 import { TransferFn } from "./ledger.idl";
 import { createBlob, writeToJson } from "./utils";
 
@@ -39,6 +44,20 @@ const createdAt1 =
 const createdAt2 =
   BigInt(new Date("05-28-2011 22:33:00").getTime()) * BigInt(1e6);
 
+const randomBytes1 = new Uint8Array([136, 67, 218, 72, 46, 254, 79, 124]);
+const randomBytes2 = new Uint8Array([202, 204, 126, 241, 130, 112, 8, 122]);
+const randomBytes3 = new Uint8Array([178, 247, 215, 62, 199, 137, 175, 189]);
+
+const buildNeuronStakeSubAccount = (
+  nonce: Uint8Array,
+  principal: Principal
+): SubAccount => {
+  const padding = asciiStringToByteArray("neuron-stake");
+  const shaObj = sha256.create();
+  shaObj.update([0x0c, ...padding, ...principal.toUint8Array(), ...nonce]);
+  return SubAccount.fromBytes(new Uint8Array(shaObj.array())) as SubAccount;
+};
+
 const createSendIcpVector = ({
   to,
   amount,
@@ -46,23 +65,39 @@ const createSendIcpVector = ({
   fee,
   fromSubAccount,
   createdAt,
-  isStakeNeuron = false,
   caller = defaultCaller,
+  randomBytes,
 }: {
-  to: AccountIdentifier;
+  to?: AccountIdentifier;
   amount: bigint;
-  memo: bigint;
+  memo?: bigint;
   fee: bigint;
   fromSubAccount?: number[];
   createdAt?: bigint;
-  isStakeNeuron?: boolean;
   caller?: Principal;
+  randomBytes?: Uint8Array;
 }) => {
+  const isStakeNeuron = to === undefined;
+  let accountIdentifier;
+  let nonce;
+  if (randomBytes !== undefined) {
+    nonce = uint8ArrayToBigInt(randomBytes);
+    const toSubAccount = buildNeuronStakeSubAccount(
+      randomBytes,
+      MAINNET_GOVERNANCE_CANISTER_ID
+    );
+    accountIdentifier = AccountIdentifier.fromPrincipal({
+      principal: MAINNET_GOVERNANCE_CANISTER_ID,
+      subAccount: toSubAccount,
+    });
+  }
+  const toAccount = to ?? accountIdentifier;
+
   const rawRequestBody = toTransferRawRequest({
-    to,
+    to: toAccount as AccountIdentifier,
     amount,
     // Used in HW
-    memo: memo || BigInt(0),
+    memo: memo ?? nonce ?? BigInt(0),
     fee,
     fromSubAccount,
     createdAt,
@@ -81,13 +116,13 @@ const createSendIcpVector = ({
       methodName: "transfer",
       canisterId: MAINNET_LEDGER_CANISTER_ID,
     }),
-    name: isStakeNeuron ? "Send ICP" : "Stake Neuron",
+    name: isStakeNeuron ? "Stake Neuron" : "Send ICP",
     screen: {
       fromAccount: AccountIdentifier.fromPrincipal({
         principal: caller,
         subAccount,
       }).toHex(),
-      toAccount: to.toHex(),
+      toAccount: isStakeNeuron ? "Stake Neuron" : to?.toHex(),
     },
     candid_request: rawRequestBody,
   };
@@ -148,28 +183,22 @@ const main = () => {
       }),
       // Stake Neuron
       createSendIcpVector({
-        to: account2,
         amount: BigInt(100_000_000_000),
         fee: BigInt(10_000),
-        memo: BigInt(123132444422),
         fromSubAccount: subaccount1,
-        isStakeNeuron: true,
+        randomBytes: randomBytes1,
       }),
       createSendIcpVector({
-        to: account2,
         amount: BigInt(100_000_000_000),
         fee: BigInt(10_000),
-        memo: BigInt(1231236788755),
         fromSubAccount: subaccount2,
-        isStakeNeuron: true,
+        randomBytes: randomBytes2,
       }),
       createSendIcpVector({
-        to: account2,
         amount: BigInt(230_000_000_000),
         fee: BigInt(10_000),
-        memo: BigInt(123123521677),
         createdAt: createdAt1,
-        isStakeNeuron: true,
+        randomBytes: randomBytes3,
       }),
     ];
 
