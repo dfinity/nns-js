@@ -1,18 +1,19 @@
 import { IDL } from "@dfinity/candid";
-import { toTransferArg } from "@dfinity/ledger/src/converters/ledger.converters";
-import { TransferParams } from "@dfinity/ledger/src/types/ledger.params";
-import {
-  MAINNET_GOVERNANCE_CANISTER_ID,
-  MAINNET_LEDGER_CANISTER_ID,
-} from "@dfinity/nns/src/constants/canister_ids";
+import { MAINNET_LEDGER_CANISTER_ID } from "@dfinity/ledger-icp/src/constants/canister_ids";
+import { toTransferArg } from "@dfinity/ledger-icrc/src/converters/ledger.converters";
+import { TransferParams } from "@dfinity/ledger-icrc/src/types/ledger.params";
+import { MAINNET_GOVERNANCE_CANISTER_ID } from "@dfinity/nns/src/constants/canister_ids";
 import { E8S_PER_TOKEN } from "@dfinity/nns/src/constants/constants";
 import { Principal } from "@dfinity/principal";
 import {
   arrayOfNumberToUint8Array,
+  asciiStringToByteArray,
   fromNullable,
   numberToUint8Array,
   uint8ArrayToBigInt,
 } from "@dfinity/utils";
+import { sha256 } from "@noble/hashes/sha256";
+import randomBytes from "randombytes";
 import { transferFn } from "./sns-ledger.idl";
 import {
   createBlob,
@@ -29,6 +30,7 @@ import {
 interface Params extends TransferParams {
   canisterId: Principal;
   owner: Principal;
+  nonce?: bigint;
 }
 
 // Fee is optional, if not provided, it will be set to 10000 which is the ICP fee
@@ -109,10 +111,29 @@ const createTestVector = (params: Params) => {
     isICP,
     isStakeNeuron,
     name: "ICRC1 Transfer",
+    nonce: params.nonce,
     canisterId: params.canisterId.toText(),
     caller: params.owner.toText() ?? defaultCaller.toText(),
     candid_request: rawRequestBody,
   };
+};
+
+// Reference: Governance Canister `getNeuronStakeSubAccountBytes` private method.
+const getNeuronStakeSubAccountBytes = (
+  nonceBytes: Uint8Array,
+  principal: Principal,
+): Uint8Array => {
+  const padding = asciiStringToByteArray("neuron-stake");
+  const shaObj = sha256.create();
+  shaObj.update(
+    arrayOfNumberToUint8Array([
+      0x0c,
+      ...padding,
+      ...principal.toUint8Array(),
+      ...nonceBytes,
+    ]),
+  );
+  return shaObj.digest();
 };
 
 const main = () => {
@@ -135,6 +156,31 @@ const main = () => {
     const shortPrincipal = Principal.fromText(
       "ttwhn-ittl6-fnuml-tqdgz-tbyhu-f7jti-ft2cr-znzsu-biv4l-gpvg4-ba",
     );
+
+    const nonceBytes1 = new Uint8Array(randomBytes(8));
+    const nonce1 = uint8ArrayToBigInt(nonceBytes1);
+    const toSubAccount1 = getNeuronStakeSubAccountBytes(
+      nonceBytes1,
+      principal1,
+    );
+    const nonceBytes1_2 = new Uint8Array(randomBytes(8));
+    const nonce1_2 = uint8ArrayToBigInt(nonceBytes1_2);
+    const toSubAccount1_2 = getNeuronStakeSubAccountBytes(
+      nonceBytes1_2,
+      principal1,
+    );
+    const nonceBytes2 = new Uint8Array(randomBytes(8));
+    const nonce2 = uint8ArrayToBigInt(nonceBytes2);
+    const toSubAccount2 = getNeuronStakeSubAccountBytes(
+      nonceBytes2,
+      principal2,
+    );
+    const nonceBytesShort = new Uint8Array(randomBytes(8));
+    const nonceShort = uint8ArrayToBigInt(nonceBytesShort);
+    const toSubAccountShort = getNeuronStakeSubAccountBytes(
+      nonceBytesShort,
+      shortPrincipal,
+    );
     const canisterId1 = Principal.fromText("ppmzm-3aaaa-aaaaa-aacpq-cai");
     const canisterId2 = Principal.fromText("s24we-diaaa-aaaaa-aaaka-cai");
     const vectors = [
@@ -142,48 +188,52 @@ const main = () => {
         owner: principal2,
         to: {
           owner: MAINNET_GOVERNANCE_CANISTER_ID,
-          subaccount: [subaccount1],
+          subaccount: [toSubAccount1],
         },
         amount: BigInt(131_400_000),
-        fee: BigInt(30_000),
+        fee: BigInt(10_000),
         from_subaccount: subaccount2,
-        memo: numberToUint8Array(11223312),
+        memo: nonceBytes1,
+        nonce: nonce1,
         canisterId: MAINNET_LEDGER_CANISTER_ID,
         created_at_time: BigInt(1675249266635000000),
       }),
       createTestVector({
-        owner: shortPrincipal,
+        owner: principal1,
         to: {
           owner: MAINNET_GOVERNANCE_CANISTER_ID,
-          subaccount: [subaccount1],
+          subaccount: [toSubAccount1_2],
         },
         amount: BigInt(131_400_000),
         fee: BigInt(30_000),
-        memo: numberToUint8Array(11223312),
+        memo: nonceBytes1_2,
+        nonce: nonce1_2,
         canisterId: MAINNET_LEDGER_CANISTER_ID,
-        created_at_time: BigInt(1675249216635000000),
+        created_at_time: BigInt(1675249219635000000),
       }),
       createTestVector({
         owner: shortPrincipal,
         to: {
           owner: MAINNET_GOVERNANCE_CANISTER_ID,
-          subaccount: [subaccount2],
+          subaccount: [toSubAccountShort],
         },
         amount: BigInt(131_400_000),
         fee: BigInt(30_000),
-        memo: numberToUint8Array(11221312),
+        memo: nonceBytesShort,
+        nonce: nonceShort,
         canisterId: MAINNET_LEDGER_CANISTER_ID,
-        created_at_time: BigInt(1675249219635000000),
+        created_at_time: BigInt(1675249216635000000),
       }),
       createTestVector({
         owner: principal2,
         to: {
           owner: MAINNET_GOVERNANCE_CANISTER_ID,
-          subaccount: [subaccount2],
+          subaccount: [toSubAccount2],
         },
         amount: BigInt(131_400_000),
         fee: BigInt(30_000),
-        memo: numberToUint8Array(11221312),
+        memo: nonceBytes2,
+        nonce: nonce2,
         canisterId: MAINNET_LEDGER_CANISTER_ID,
         created_at_time: BigInt(1675249219635000000),
       }),

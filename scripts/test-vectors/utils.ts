@@ -5,8 +5,8 @@ import {
   ReadRequest,
   SubmitRequestType,
 } from "@dfinity/agent";
-import { IcrcAccount } from "@dfinity/ledger/src/types/ledger.responses";
-import { encodeIcrcAccount } from "@dfinity/ledger/src/utils/ledger.utils";
+import { IcrcAccount } from "@dfinity/ledger-icrc/src/types/ledger.responses";
+import { encodeIcrcAccount } from "@dfinity/ledger-icrc/src/utils/ledger.utils";
 import { Principal } from "@dfinity/principal";
 import { writeFileSync } from "fs";
 import { MAINNET_GOVERNANCE_CANISTER_ID } from "../../packages/nns/src/constants/canister_ids";
@@ -43,7 +43,7 @@ function _prepareCborForLedger(
 const DEFAULT_INGRESS_EXPIRY_DELTA_IN_MSECS = 5 * 60 * 1000;
 
 export const defaultCaller = Principal.fromText(
-  "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe"
+  "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe",
 );
 
 const createCallRequest = ({
@@ -129,7 +129,7 @@ export const splitPrincipal = (principal: Principal): string[] => {
 
 export const splitString = (
   textToSplit: string,
-  screenText: string
+  screenText: string,
 ): string[] => {
   return (
     textToSplit
@@ -148,14 +148,14 @@ export const splitString = (
       }, [] as string[])
       ?.map(
         (data, i, elements) =>
-          `${screenText} [${i + 1}/${elements.length}] : ${data}`
+          `${screenText} [${i + 1}/${elements.length}] : ${data}`,
       ) || []
   );
 };
 
 export const splitAccount = (
   account: IcrcAccount,
-  screenText: string
+  screenText: string,
 ): string[] => {
   return splitString(encodeIcrcAccount(account), screenText);
 };
@@ -184,5 +184,5 @@ export const permissionMapper: Record<SnsNeuronPermissionType, string> = {
 export const bytesToHexString = (bytes: number[]): string =>
   bytes.reduce(
     (str, byte) => `${str}${byte.toString(16).padStart(2, "0")}`,
-    ""
+    "",
   );
