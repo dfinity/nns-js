@@ -395,7 +395,6 @@ const ListKnownNeuronsResponse = IDL.Record({
 const ListNeurons = IDL.Record({
   neuron_ids: IDL.Vec(IDL.Nat64),
   include_neurons_readable_by_caller: IDL.Bool,
-  include_empty_neurons_readable_by_caller: IDL.Opt(IDL.Bool),
 });
 const ListNeuronsResponse = IDL.Record({
   neuron_infos: IDL.Vec(IDL.Tuple(IDL.Nat64, NeuronInfo)),

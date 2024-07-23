@@ -4,6 +4,7 @@
 import { IDL } from "@dfinity/candid";
 import { NeuronId } from "@dfinity/nns/src";
 import { toNullable } from "@dfinity/utils/src";
+import { ListNeuronsFn as ListNeuronsFnWithoutFlag } from "./governance-without-empty-neurons-flag.idl";
 import { ListNeuronsFn } from "./governance.idl";
 import { createBlob, writeToJson } from "./utils";
 
@@ -30,7 +31,12 @@ const createListNeurons = ({
 
   const test = {
     blob_candid: createBlob({
-      arg: IDL.encode(ListNeuronsFn.argTypes, [rawRequestBody]),
+      arg: IDL.encode(
+        includeEmptyNeurons === null
+          ? ListNeuronsFnWithoutFlag.argTypes
+          : ListNeuronsFn.argTypes,
+        [rawRequestBody],
+      ),
       methodName: "list_neurons",
     }),
     name: `List Neurons ${
