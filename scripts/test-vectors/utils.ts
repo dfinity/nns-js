@@ -33,7 +33,7 @@ import { SnsNeuronPermissionType } from "../../packages/sns/src/enums/governance
  * - `hardwareWallet: false` in the method.
  */
 
-function _prepareCborForLedger(
+export function _prepareCborForLedger(
   request: ReadRequest | CallRequest,
 ): ArrayBuffer {
   return Cbor.encode({ content: request });
