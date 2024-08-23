@@ -23,7 +23,8 @@ interface StakeMaturityParams extends SnsNeuronStakeMaturityParams {
 const createStakeMaturityVector = (params: StakeMaturityParams) => {
   const rawRequestBody = toStakeMaturityRequest(params);
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
-    (data, i, elements) => `Canister Id [${i + 1}/${elements.length}] : ${data}`
+    (data, i, elements) =>
+      `Canister Id [${i + 1}/${elements.length}] : ${data}`,
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");

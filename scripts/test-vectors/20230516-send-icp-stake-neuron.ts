@@ -16,19 +16,19 @@ import { TransferFn } from "./ledger.idl";
 import { createBlob, writeToJson } from "./utils";
 
 const account1 = AccountIdentifier.fromHex(
-  "d3e13d4777e22367532053190b6c6ccf57444a61337e996242b1abfb52cf92c8"
+  "d3e13d4777e22367532053190b6c6ccf57444a61337e996242b1abfb52cf92c8",
 );
 const account2 = AccountIdentifier.fromPrincipal({
   principal: Principal.fromText(
-    "bwz3t-ercuj-owo6s-4adfr-sbu4o-l72hg-kfhc5-5sapm-tj6bn-3scho-uqe"
+    "bwz3t-ercuj-owo6s-4adfr-sbu4o-l72hg-kfhc5-5sapm-tj6bn-3scho-uqe",
   ),
 });
 
 const defaultCaller = Principal.fromText(
-  "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe"
+  "5upke-tazvi-6ufqc-i3v6r-j4gpu-dpwti-obhal-yb5xj-ue32x-ktkql-rqe",
 );
 const caller1 = Principal.fromText(
-  "bwz3t-ercuj-owo6s-4adfr-sbu4o-l72hg-kfhc5-5sapm-tj6bn-3scho-uqe"
+  "bwz3t-ercuj-owo6s-4adfr-sbu4o-l72hg-kfhc5-5sapm-tj6bn-3scho-uqe",
 );
 
 const subaccount1 = [
@@ -50,7 +50,7 @@ const randomBytes3 = new Uint8Array([178, 247, 215, 62, 199, 137, 175, 189]);
 
 const buildNeuronStakeSubAccount = (
   nonce: Uint8Array,
-  principal: Principal
+  principal: Principal,
 ): SubAccount => {
   const padding = asciiStringToByteArray("neuron-stake");
   const shaObj = sha256.create();
@@ -104,7 +104,7 @@ const createSendIcpVector = ({
     fromSubAccount === undefined
       ? undefined
       : (SubAccount.fromBytes(
-          arrayOfNumberToUint8Array(fromSubAccount)
+          arrayOfNumberToUint8Array(fromSubAccount),
         ) as SubAccount);
 
   return {

@@ -18,12 +18,12 @@ const NervousSystemFunction = IDL.Record({
 });
 const GovernanceCachedMetrics = IDL.Record({
   not_dissolving_neurons_e8s_buckets: IDL.Vec(
-    IDL.Tuple(IDL.Nat64, IDL.Float64)
+    IDL.Tuple(IDL.Nat64, IDL.Float64),
   ),
   garbage_collectable_neurons_count: IDL.Nat64,
   neurons_with_invalid_stake_count: IDL.Nat64,
   not_dissolving_neurons_count_buckets: IDL.Vec(
-    IDL.Tuple(IDL.Nat64, IDL.Nat64)
+    IDL.Tuple(IDL.Nat64, IDL.Nat64),
   ),
   neurons_with_less_than_6_months_dissolve_delay_count: IDL.Nat64,
   dissolved_neurons_count: IDL.Nat64,
@@ -273,7 +273,7 @@ const Neuron = IDL.Record({
 const Governance = IDL.Record({
   root_canister_id: IDL.Opt(IDL.Principal),
   id_to_nervous_system_functions: IDL.Vec(
-    IDL.Tuple(IDL.Nat64, NervousSystemFunction)
+    IDL.Tuple(IDL.Nat64, NervousSystemFunction),
   ),
   metrics: IDL.Opt(GovernanceCachedMetrics),
   mode: IDL.Int32,
@@ -431,7 +431,7 @@ const SetMode = IDL.Record({ mode: IDL.Int32 });
 export const ManageNeuronFn = IDL.Func(
   [ManageNeuron],
   [ManageNeuronResponse],
-  []
+  [],
 );
 
 // List of endpoints
@@ -439,14 +439,14 @@ IDL.Service({
   claim_swap_neurons: IDL.Func(
     [ClaimSwapNeuronsRequest],
     [ClaimSwapNeuronsResponse],
-    []
+    [],
   ),
   get_build_metadata: IDL.Func([], [IDL.Text], ["query"]),
   get_metadata: IDL.Func([IDL.Record({})], [GetMetadataResponse], ["query"]),
   get_nervous_system_parameters: IDL.Func(
     [IDL.Null],
     [NervousSystemParameters],
-    ["query"]
+    ["query"],
   ),
   get_neuron: IDL.Func([GetNeuron], [GetNeuronResponse], ["query"]),
   get_proposal: IDL.Func([GetProposal], [GetProposalResponse], ["query"]),
@@ -454,17 +454,17 @@ IDL.Service({
   get_running_sns_version: IDL.Func(
     [IDL.Record({})],
     [GetRunningSnsVersionResponse],
-    ["query"]
+    ["query"],
   ),
   get_sns_initialization_parameters: IDL.Func(
     [IDL.Record({})],
     [GetSnsInitializationParametersResponse],
-    ["query"]
+    ["query"],
   ),
   list_nervous_system_functions: IDL.Func(
     [],
     [ListNervousSystemFunctionsResponse],
-    ["query"]
+    ["query"],
   ),
   list_neurons: IDL.Func([ListNeurons], [ListNeuronsResponse], ["query"]),
   list_proposals: IDL.Func([ListProposals], [ListProposalsResponse], ["query"]),

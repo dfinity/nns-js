@@ -11,7 +11,7 @@ import { createBlob, splitPrincipal, writeToJson } from "./utils";
 const mockNeuronId = BigInt(15374508381553347371);
 const mockNeuronId2 = BigInt(8836564053576662908);
 const mockPrincipal = Principal.fromText(
-  "xlmdg-vkosz-ceopx-7wtgu-g3xmd-koiyc-awqaq-7modz-zf6r6-364rh-oqe"
+  "xlmdg-vkosz-ceopx-7wtgu-g3xmd-koiyc-awqaq-7modz-zf6r6-364rh-oqe",
 );
 
 const createCandidSpawnNeuron = ({
@@ -46,7 +46,7 @@ const createCandidSpawnNeuron = ({
       ? ["Controller : Self"]
       : splitPrincipal(newController).map(
           (data, i, elements) =>
-            `Controller [${i + 1}/${elements.length}] : ${data}`
+            `Controller [${i + 1}/${elements.length}] : ${data}`,
         );
 
   outputs.push(...controllerMessages);

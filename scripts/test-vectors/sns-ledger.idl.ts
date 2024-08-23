@@ -62,14 +62,14 @@ const service = IDL.Service({
   icrc1_metadata: IDL.Func(
     [],
     [IDL.Vec(IDL.Tuple(IDL.Text, Value))],
-    ["query"]
+    ["query"],
   ),
   icrc1_minting_account: IDL.Func([], [IDL.Opt(Account)], ["query"]),
   icrc1_name: IDL.Func([], [IDL.Text], ["query"]),
   icrc1_supported_standards: IDL.Func(
     [],
     [IDL.Vec(IDL.Record({ url: IDL.Text, name: IDL.Text }))],
-    ["query"]
+    ["query"],
   ),
   icrc1_symbol: IDL.Func([], [IDL.Text], ["query"]),
   icrc1_total_supply: IDL.Func([], [Tokens], ["query"]),

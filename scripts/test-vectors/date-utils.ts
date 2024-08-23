@@ -38,7 +38,7 @@ export const secondsToDissolveDelayDuration = (seconds: bigint): string => {
   const years = seconds / BigInt(SECONDS_IN_YEAR);
   const months = (seconds % BigInt(SECONDS_IN_YEAR)) / BigInt(SECONDS_IN_MONTH);
   const days = BigInt(
-    Math.ceil((Number(seconds) % SECONDS_IN_MONTH) / SECONDS_IN_DAY)
+    Math.ceil((Number(seconds) % SECONDS_IN_MONTH) / SECONDS_IN_DAY),
   );
   const periods = [
     createLabel("year", years),
@@ -54,7 +54,7 @@ export const secondsToDissolveDelayDuration = (seconds: bigint): string => {
           labelInfo.amount === 1
             ? labels[labelInfo.labelKey]
             : labels[`${labelInfo.labelKey}_plural`]
-        }`
+        }`,
     )
     .join(", ");
 };

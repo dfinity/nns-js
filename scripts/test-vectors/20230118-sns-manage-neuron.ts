@@ -30,14 +30,15 @@ interface DisburseParams extends SnsDisburseNeuronParams {
 const createDisburseVector = (params: DisburseParams) => {
   const rawRequestBody = toDisburseNeuronRequest(params);
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
-    (data, i, elements) => `Canister Id [${i + 1}/${elements.length}] : ${data}`
+    (data, i, elements) =>
+      `Canister Id [${i + 1}/${elements.length}] : ${data}`,
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");
   const disburseToAccountStr = encodeIcrcAccount(
     params.toAccount ?? {
       owner: defaultCaller,
-    }
+    },
   );
   const disburseToOutputs = splitString(disburseToAccountStr, "Disburse to");
   const amount = params.amount
@@ -73,7 +74,8 @@ interface SetDissolveParams {
 const createStopDissolveVector = (params: SetDissolveParams) => {
   const rawRequestBody = toStopDissolvingNeuronRequest(params.neuronId);
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
-    (data, i, elements) => `Canister Id [${i + 1}/${elements.length}] : ${data}`
+    (data, i, elements) =>
+      `Canister Id [${i + 1}/${elements.length}] : ${data}`,
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");
@@ -99,7 +101,8 @@ const createStopDissolveVector = (params: SetDissolveParams) => {
 const createStartDissolveVector = (params: SetDissolveParams) => {
   const rawRequestBody = toStartDissolvingNeuronRequest(params.neuronId);
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
-    (data, i, elements) => `Canister Id [${i + 1}/${elements.length}] : ${data}`
+    (data, i, elements) =>
+      `Canister Id [${i + 1}/${elements.length}] : ${data}`,
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs = splitString(neuronIdString, "Neuron Id");
@@ -134,10 +137,10 @@ const main = () => {
       61,
     ]);
     const principal1 = Principal.fromText(
-      "krpzt-buecq-u3umg-7kb7r-j5jpx-twqwa-3ykc4-y3cnk-7kwvw-5bq6z-mae"
+      "krpzt-buecq-u3umg-7kb7r-j5jpx-twqwa-3ykc4-y3cnk-7kwvw-5bq6z-mae",
     );
     const principal2 = Principal.fromText(
-      "2dfd6-abjpf-eihu7-pwv6m-qnlbt-oszmg-kb26q-rvqms-onmuh-mwiq3-uqe"
+      "2dfd6-abjpf-eihu7-pwv6m-qnlbt-oszmg-kb26q-rvqms-onmuh-mwiq3-uqe",
     );
     const snsAccount1 = {
       owner: principal1,

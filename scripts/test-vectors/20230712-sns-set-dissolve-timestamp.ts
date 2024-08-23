@@ -4,10 +4,10 @@ import { SnsSetDissolveTimestampParams } from "@dfinity/sns/src";
 import { toSetDissolveTimestampRequest } from "@dfinity/sns/src/converters/governance.converters";
 import { arrayOfNumberToUint8Array } from "@dfinity/utils";
 import {
-  secondsToDissolveDelayDuration,
   SECONDS_IN_DAY,
   SECONDS_IN_MONTH,
   SECONDS_IN_YEAR,
+  secondsToDissolveDelayDuration,
 } from "./date-utils";
 import { ManageNeuronFn } from "./sns-governance.idl";
 import { bytesToHexString, createBlob, writeToJson } from "./utils";
@@ -25,7 +25,7 @@ const createTestVector = (params: Params) => {
   const rawRequestBody = toSetDissolveTimestampRequest(params);
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const timestampLabel = secondsToDissolveDelayDuration(
-    params.dissolveTimestampSeconds - BigInt(nowInSeconds)
+    params.dissolveTimestampSeconds - BigInt(nowInSeconds),
   );
   console.log("in da test vector", params.dissolveTimestampSeconds);
   return {
@@ -58,15 +58,15 @@ const main = () => {
     const canisterId2 = Principal.fromText("s24we-diaaa-aaaaa-aaaka-cai");
     const inOneYear = BigInt(nowInSeconds + SECONDS_IN_YEAR);
     const nextYearAndAHalf = BigInt(
-      Math.round(nowInSeconds + SECONDS_IN_YEAR + SECONDS_IN_MONTH * 6)
+      Math.round(nowInSeconds + SECONDS_IN_YEAR + SECONDS_IN_MONTH * 6),
     );
     const inOneYearMonthsAndDays = BigInt(
       Math.round(
         nowInSeconds +
           SECONDS_IN_YEAR +
           SECONDS_IN_MONTH * 3 +
-          SECONDS_IN_DAY * 18
-      )
+          SECONDS_IN_DAY * 18,
+      ),
     );
     const inSixMonths = BigInt(Math.round(nowInSeconds + SECONDS_IN_MONTH * 6));
     const inEightYears = BigInt(Math.round(nowInSeconds + SECONDS_IN_YEAR * 8));

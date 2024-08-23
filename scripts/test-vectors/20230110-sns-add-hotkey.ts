@@ -24,7 +24,8 @@ interface Params extends SnsNeuronPermissionsParams {
 const createTestVector = (params: Params) => {
   const rawRequestBody = toAddPermissionsRequest(params);
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
-    (data, i, elements) => `Canister Id [${i + 1}/${elements.length}] : ${data}`
+    (data, i, elements) =>
+      `Canister Id [${i + 1}/${elements.length}] : ${data}`,
   );
   const neuronIdString = bytesToHexString(Array.from(params.neuronId.id));
   const neuronIdOutputs =
@@ -44,14 +45,14 @@ const createTestVector = (params: Params) => {
       }, [] as string[])
       ?.map(
         (data, i, elements) =>
-          `Neuron Id [${i + 1}/${elements.length}] : ${data}`
+          `Neuron Id [${i + 1}/${elements.length}] : ${data}`,
       ) || [];
   const principalOutputs = splitPrincipal(params.principal).map(
     (data, i, elements) =>
-      `Principal Id [${i + 1}/${elements.length}] : ${data}`
+      `Principal Id [${i + 1}/${elements.length}] : ${data}`,
   );
   const permissionOutputs = params.permissions.map(
-    (p) => `Add Permission : ${permissionMapper[p]}`
+    (p) => `Add Permission : ${permissionMapper[p]}`,
   );
   const output = [
     "Transaction type : Add Neuron Permissions",
@@ -86,10 +87,10 @@ const main = () => {
       61,
     ]);
     const principal1 = Principal.fromText(
-      "krpzt-buecq-u3umg-7kb7r-j5jpx-twqwa-3ykc4-y3cnk-7kwvw-5bq6z-mae"
+      "krpzt-buecq-u3umg-7kb7r-j5jpx-twqwa-3ykc4-y3cnk-7kwvw-5bq6z-mae",
     );
     const principal2 = Principal.fromText(
-      "2dfd6-abjpf-eihu7-pwv6m-qnlbt-oszmg-kb26q-rvqms-onmuh-mwiq3-uqe"
+      "2dfd6-abjpf-eihu7-pwv6m-qnlbt-oszmg-kb26q-rvqms-onmuh-mwiq3-uqe",
     );
     const canisterId1 = Principal.fromText("ppmzm-3aaaa-aaaaa-aacpq-cai");
     const canisterId2 = Principal.fromText("s24we-diaaa-aaaaa-aaaka-cai");

@@ -9,7 +9,7 @@ const mockNeuronId2 = BigInt(8836564053576662908);
 
 const createIncreaseDissolveDelayVector = (
   neuronId: NeuronId,
-  additionalDissolveDelaySeconds: number
+  additionalDissolveDelaySeconds: number,
 ) => {
   const params = {
     neuronId,

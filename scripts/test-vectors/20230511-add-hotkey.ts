@@ -8,10 +8,10 @@ import { createBlob, writeToJson } from "./utils";
 const mockNeuronId = BigInt(15374508381553347371);
 const mockNeuronId2 = BigInt(8836564053576662908);
 const principal1 = Principal.fromText(
-  "krpzt-buecq-u3umg-7kb7r-j5jpx-twqwa-3ykc4-y3cnk-7kwvw-5bq6z-mae"
+  "krpzt-buecq-u3umg-7kb7r-j5jpx-twqwa-3ykc4-y3cnk-7kwvw-5bq6z-mae",
 );
 const principal2 = Principal.fromText(
-  "2dfd6-abjpf-eihu7-pwv6m-qnlbt-oszmg-kb26q-rvqms-onmuh-mwiq3-uqe"
+  "2dfd6-abjpf-eihu7-pwv6m-qnlbt-oszmg-kb26q-rvqms-onmuh-mwiq3-uqe",
 );
 
 const createAddHotkeyVector = ({

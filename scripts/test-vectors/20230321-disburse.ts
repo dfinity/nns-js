@@ -10,10 +10,10 @@ const mockNeuronId2 = BigInt(8836564053576662908);
 const amount1 = BigInt(20_000_000);
 const amount2 = BigInt(25_000_000);
 const account1 = AccountIdentifier.fromHex(
-  "d4685b31b51450508aff0331584df7692a84467b680326f5c5f7d30ae711682f"
+  "d4685b31b51450508aff0331584df7692a84467b680326f5c5f7d30ae711682f",
 );
 const account2 = AccountIdentifier.fromHex(
-  "b1cebc8480a0afc91198a87ddf52c6ca7eb7ccddb0cb398064f71d2bbaf2f72b"
+  "b1cebc8480a0afc91198a87ddf52c6ca7eb7ccddb0cb398064f71d2bbaf2f72b",
 );
 
 const createDisburseVector = ({

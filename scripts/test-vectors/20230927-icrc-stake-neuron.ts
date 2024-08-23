@@ -48,8 +48,8 @@ const createTestVector = (params: Params) => {
   let outputTxType = isStakeNeuron
     ? "Stake Neuron"
     : isICP
-    ? "Send ICP"
-    : "Send Tokens";
+      ? "Send ICP"
+      : "Send Tokens";
   const canisterIdOutputs = splitPrincipal(params.canisterId).map(
     (data, i, elements) =>
       `Canister Id [${i + 1}/${elements.length}] : ${data}`,
