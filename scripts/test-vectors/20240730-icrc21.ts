@@ -28,7 +28,7 @@ function hexStringToArrayBuffer(hexString: string): ArrayBuffer {
 const callRequest = {
   arg: hexStringToArrayBuffer("4449444C00017104746F6269"),
   canister_id: Principal.fromHex("00000000006000FD0101"),
-  ingress_expiry: BigInt("1712667140606000000"),
+  ingress_expiry: BigInt("1712666798482000000"),
   method_name: "greet",
   request_type: "query",
   sender: defaultCaller,
