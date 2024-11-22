@@ -82,8 +82,8 @@ const createTestVector = (params: Params) => {
   const expectedAllowanceOutput =
     expectedAllowance !== undefined
       ? isICP
-        ? [`Expected Allowance (ICP) : ${expectedAllowance}`]
-        : [`Expected Allowance (Tokens) : ${expectedAllowance}`]
+        ? [`Expected Current Allowance (ICP) : ${expectedAllowance}`]
+        : [`Expected Current Allowance (Tokens) : ${expectedAllowance}`]
       : [];
 
   // Do not show fee if it's not present in the request body.
