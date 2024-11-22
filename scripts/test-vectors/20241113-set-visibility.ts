@@ -5,6 +5,10 @@ import { NeuronVisibility } from "@dfinity/nns/src/enums/governance.enums";
 import { ManageNeuronFn } from "./governance.idl";
 import { createBlob, writeToJson } from "./utils";
 
+/**
+ * Issue: https://github.com/Zondax/ledger-icp/issues/249
+ */
+
 const mockNeuronId = BigInt(15374508381553347371);
 const mockNeuronId2 = BigInt(8836564053576662908);
 
