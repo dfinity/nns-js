@@ -22,6 +22,7 @@ const Follow = IDL.Record({
   topic: IDL.Int32,
   followees: IDL.Vec(NeuronId),
 });
+const RefreshVotingPower = IDL.Record({});
 const ClaimOrRefreshNeuronFromAccount = IDL.Record({
   controller: IDL.Opt(IDL.Principal),
   memo: IDL.Nat64,
@@ -86,6 +87,7 @@ const Command = IDL.Variant({
   Spawn: Spawn,
   Split: Split,
   Follow: Follow,
+  RefreshVotingPower: RefreshVotingPower,
   ClaimOrRefresh: ClaimOrRefresh,
   Configure: Configure,
   RegisterVote: RegisterVote,
@@ -274,6 +276,10 @@ const RewardNodeProviders = IDL.Record({
   use_registry_derived_rewards: IDL.Opt(IDL.Bool),
   rewards: IDL.Vec(RewardNodeProvider),
 });
+const VotingPowerEconomics = IDL.Record({
+  start_reducing_voting_power_after_seconds: IDL.Opt(IDL.Nat64),
+  clear_following_after_seconds: IDL.Opt(IDL.Nat64),
+});
 const Decimal = IDL.Record({ human_readable: IDL.Opt(IDL.Text) });
 const NeuronsFundMatchedFundingCurveCoefficients = IDL.Record({
   contribution_threshold_xdr: IDL.Opt(Decimal),
@@ -290,6 +296,7 @@ const NeuronsFundEconomics = IDL.Record({
 });
 const NetworkEconomics = IDL.Record({
   neuron_minimum_stake_e8s: IDL.Nat64,
+  voting_power_economics: IDL.Opt(VotingPowerEconomics),
   max_proposals_to_keep_per_topic: IDL.Nat32,
   neuron_management_fee_per_proposal_e8s: IDL.Nat64,
   reject_cost_e8s: IDL.Nat64,
@@ -591,9 +598,11 @@ const Neuron = IDL.Record({
   recent_ballots: IDL.Vec(BallotInfo),
   voting_power_refreshed_timestamp_seconds: IDL.Opt(IDL.Nat64),
   kyc_verified: IDL.Bool,
+  potential_voting_power: IDL.Opt(IDL.Nat64),
   neuron_type: IDL.Opt(IDL.Int32),
   not_for_profit: IDL.Bool,
   maturity_e8s_equivalent: IDL.Nat64,
+  deciding_voting_power: IDL.Opt(IDL.Nat64),
   cached_neuron_stake_e8s: IDL.Nat64,
   created_timestamp_seconds: IDL.Nat64,
   auto_stake_maturity: IDL.Opt(IDL.Bool),
@@ -656,7 +665,9 @@ const NeuronInfo = IDL.Record({
   dissolve_delay_seconds: IDL.Nat64,
   recent_ballots: IDL.Vec(BallotInfo),
   voting_power_refreshed_timestamp_seconds: IDL.Opt(IDL.Nat64),
+  potential_voting_power: IDL.Opt(IDL.Nat64),
   neuron_type: IDL.Opt(IDL.Int32),
+  deciding_voting_power: IDL.Opt(IDL.Nat64),
   created_timestamp_seconds: IDL.Nat64,
   state: IDL.Int32,
   stake_e8s: IDL.Nat64,
@@ -777,6 +788,7 @@ const ManageNeuronCommandRequest = IDL.Variant({
   Spawn: Spawn,
   Split: Split,
   Follow: Follow,
+  RefreshVotingPower: RefreshVotingPower,
   ClaimOrRefresh: ClaimOrRefresh,
   Configure: Configure,
   RegisterVote: RegisterVote,
@@ -795,6 +807,7 @@ ManageNeuronRequest.fill(
   }),
 );
 const SpawnResponse = IDL.Record({ created_neuron_id: IDL.Opt(NeuronId) });
+const RefreshVotingPowerResponse = IDL.Record({});
 const ClaimOrRefreshResponse = IDL.Record({
   refreshed_neuron_id: IDL.Opt(NeuronId),
 });
@@ -822,6 +835,7 @@ const Command_1 = IDL.Variant({
   Spawn: SpawnResponse,
   Split: SpawnResponse,
   Follow: IDL.Record({}),
+  RefreshVotingPower: RefreshVotingPowerResponse,
   ClaimOrRefresh: ClaimOrRefreshResponse,
   Configure: IDL.Record({}),
   RegisterVote: IDL.Record({}),
@@ -875,6 +889,77 @@ const SettleNeuronsFundParticipationResponse = IDL.Record({
 });
 const UpdateNodeProvider = IDL.Record({
   reward_account: IDL.Opt(AccountIdentifier),
+});
+const service = IDL.Service({
+  claim_gtc_neurons: IDL.Func([IDL.Principal, IDL.Vec(NeuronId)], [Result], []),
+  claim_or_refresh_neuron_from_account: IDL.Func(
+    [ClaimOrRefreshNeuronFromAccount],
+    [ClaimOrRefreshNeuronFromAccountResponse],
+    [],
+  ),
+  get_build_metadata: IDL.Func([], [IDL.Text], ["query"]),
+  get_full_neuron: IDL.Func([IDL.Nat64], [Result_2], ["query"]),
+  get_full_neuron_by_id_or_subaccount: IDL.Func(
+    [NeuronIdOrSubaccount],
+    [Result_2],
+    ["query"],
+  ),
+  get_latest_reward_event: IDL.Func([], [RewardEvent], ["query"]),
+  get_metrics: IDL.Func([], [Result_3], ["query"]),
+  get_monthly_node_provider_rewards: IDL.Func([], [Result_4], []),
+  get_most_recent_monthly_node_provider_rewards: IDL.Func(
+    [],
+    [IDL.Opt(MonthlyNodeProviderRewards)],
+    ["query"],
+  ),
+  get_network_economics_parameters: IDL.Func([], [NetworkEconomics], ["query"]),
+  get_neuron_ids: IDL.Func([], [IDL.Vec(IDL.Nat64)], ["query"]),
+  get_neuron_info: IDL.Func([IDL.Nat64], [Result_5], ["query"]),
+  get_neuron_info_by_id_or_subaccount: IDL.Func(
+    [NeuronIdOrSubaccount],
+    [Result_5],
+    ["query"],
+  ),
+  get_neurons_fund_audit_info: IDL.Func(
+    [GetNeuronsFundAuditInfoRequest],
+    [GetNeuronsFundAuditInfoResponse],
+    ["query"],
+  ),
+  get_node_provider_by_caller: IDL.Func([IDL.Null], [Result_7], ["query"]),
+  get_pending_proposals: IDL.Func([], [IDL.Vec(ProposalInfo)], ["query"]),
+  get_proposal_info: IDL.Func([IDL.Nat64], [IDL.Opt(ProposalInfo)], ["query"]),
+  get_restore_aging_summary: IDL.Func([], [RestoreAgingSummary], ["query"]),
+  list_known_neurons: IDL.Func([], [ListKnownNeuronsResponse], ["query"]),
+  list_neurons: IDL.Func([ListNeurons], [ListNeuronsResponse], ["query"]),
+  list_node_provider_rewards: IDL.Func(
+    [ListNodeProviderRewardsRequest],
+    [ListNodeProviderRewardsResponse],
+    ["query"],
+  ),
+  list_node_providers: IDL.Func([], [ListNodeProvidersResponse], ["query"]),
+  list_proposals: IDL.Func(
+    [ListProposalInfo],
+    [ListProposalInfoResponse],
+    ["query"],
+  ),
+  manage_neuron: IDL.Func([ManageNeuronRequest], [ManageNeuronResponse], []),
+  settle_community_fund_participation: IDL.Func(
+    [SettleCommunityFundParticipation],
+    [Result],
+    [],
+  ),
+  settle_neurons_fund_participation: IDL.Func(
+    [SettleNeuronsFundParticipationRequest],
+    [SettleNeuronsFundParticipationResponse],
+    [],
+  ),
+  simulate_manage_neuron: IDL.Func(
+    [ManageNeuronRequest],
+    [ManageNeuronResponse],
+    [],
+  ),
+  transfer_gtc_neuron: IDL.Func([NeuronId, NeuronId], [Result], []),
+  update_node_provider: IDL.Func([UpdateNodeProvider], [Result], []),
 });
 
 export const ManageNeuronFn = IDL.Func(
