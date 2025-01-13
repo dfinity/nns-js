@@ -224,6 +224,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const ManageDappCanisterSettings = IDL.Record({
     'freezing_threshold' : IDL.Opt(IDL.Nat64),
+    'wasm_memory_threshold' : IDL.Opt(IDL.Nat64),
     'canister_ids' : IDL.Vec(IDL.Principal),
     'reserved_cycles_limit' : IDL.Opt(IDL.Nat64),
     'log_visibility' : IDL.Opt(IDL.Int32),
@@ -537,6 +538,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const DefiniteCanisterSettingsArgs = IDL.Record({
     'freezing_threshold' : IDL.Nat,
+    'wasm_memory_threshold' : IDL.Opt(IDL.Nat),
     'controllers' : IDL.Vec(IDL.Principal),
     'wasm_memory_limit' : IDL.Opt(IDL.Nat),
     'memory_allocation' : IDL.Nat,
@@ -963,6 +965,7 @@ export const init = ({ IDL }) => {
   });
   const ManageDappCanisterSettings = IDL.Record({
     'freezing_threshold' : IDL.Opt(IDL.Nat64),
+    'wasm_memory_threshold' : IDL.Opt(IDL.Nat64),
     'canister_ids' : IDL.Vec(IDL.Principal),
     'reserved_cycles_limit' : IDL.Opt(IDL.Nat64),
     'log_visibility' : IDL.Opt(IDL.Int32),

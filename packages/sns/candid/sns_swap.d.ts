@@ -44,6 +44,7 @@ export interface Countries {
 }
 export interface DefiniteCanisterSettingsArgs {
   freezing_threshold: bigint;
+  wasm_memory_threshold: [] | [bigint];
   controllers: Array<Principal>;
   wasm_memory_limit: [] | [bigint];
   memory_allocation: bigint;

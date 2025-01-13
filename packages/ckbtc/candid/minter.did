@@ -1,4 +1,4 @@
-// Generated from IC repo commit d9fe207 (2024-12-06 tags: release-2024-12-06_03-16-base) 'rs/bitcoin/ckbtc/minter/ckbtc_minter.did' by import-candid
+// Generated from IC repo commit aa705aa (2025-01-08 tags: release-2025-01-09_03-19-base) 'rs/bitcoin/ckbtc/minter/ckbtc_minter.did' by import-candid
 // Represents an account on the ckBTC ledger.
 type Account = record { owner : principal; subaccount : opt blob };
 
@@ -351,7 +351,12 @@ type SuspendedReason = variant {
     Quarantined;
 };
 
-type Event = variant {
+type Event = record {
+    timestamp : opt nat64;
+    payload : EventType;
+};
+
+type EventType = variant {
     init : InitArgs;
     upgrade : UpgradeArgs;
     received_utxos : record { to_account : Account; mint_txid : opt nat64; utxos : vec Utxo };

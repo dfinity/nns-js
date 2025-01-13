@@ -142,6 +142,7 @@ export interface DefaultFollowees {
 }
 export interface DefiniteCanisterSettingsArgs {
   freezing_threshold: bigint;
+  wasm_memory_threshold: [] | [bigint];
   controllers: Array<Principal>;
   wasm_memory_limit: [] | [bigint];
   memory_allocation: bigint;
@@ -327,6 +328,7 @@ export interface ListProposalsResponse {
 }
 export interface ManageDappCanisterSettings {
   freezing_threshold: [] | [bigint];
+  wasm_memory_threshold: [] | [bigint];
   canister_ids: Array<Principal>;
   reserved_cycles_limit: [] | [bigint];
   log_visibility: [] | [number];

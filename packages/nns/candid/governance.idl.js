@@ -110,6 +110,7 @@ export const idlFactory = ({ IDL }) => {
   const Controllers = IDL.Record({ 'controllers' : IDL.Vec(IDL.Principal) });
   const CanisterSettings = IDL.Record({
     'freezing_threshold' : IDL.Opt(IDL.Nat64),
+    'wasm_memory_threshold' : IDL.Opt(IDL.Nat64),
     'controllers' : IDL.Opt(Controllers),
     'log_visibility' : IDL.Opt(IDL.Int32),
     'wasm_memory_limit' : IDL.Opt(IDL.Nat64),
@@ -365,12 +366,16 @@ export const idlFactory = ({ IDL }) => {
     'voting_power_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'total_staked_e8s' : IDL.Opt(IDL.Nat64),
     'count' : IDL.Opt(IDL.Nat64),
+    'deciding_voting_power_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'total_staked_maturity_e8s_equivalent' : IDL.Opt(IDL.Nat64),
+    'total_potential_voting_power' : IDL.Opt(IDL.Nat64),
+    'total_deciding_voting_power' : IDL.Opt(IDL.Nat64),
     'staked_maturity_e8s_equivalent_buckets' : IDL.Vec(
       IDL.Tuple(IDL.Nat64, IDL.Nat64)
     ),
     'staked_e8s_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'total_voting_power' : IDL.Opt(IDL.Nat64),
+    'potential_voting_power_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'count_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
   });
   const GovernanceCachedMetrics = IDL.Record({
@@ -395,6 +400,9 @@ export const idlFactory = ({ IDL }) => {
     'total_staked_e8s_seed' : IDL.Nat64,
     'total_staked_maturity_e8s_equivalent_ect' : IDL.Nat64,
     'total_staked_e8s' : IDL.Nat64,
+    'fully_lost_voting_power_neuron_subset_metrics' : IDL.Opt(
+      NeuronSubsetMetrics
+    ),
     'not_dissolving_neurons_count' : IDL.Nat64,
     'total_locked_e8s' : IDL.Nat64,
     'neurons_fund_total_active_neurons' : IDL.Nat64,
@@ -404,6 +412,9 @@ export const idlFactory = ({ IDL }) => {
     'total_staked_maturity_e8s_equivalent' : IDL.Nat64,
     'not_dissolving_neurons_e8s_buckets_ect' : IDL.Vec(
       IDL.Tuple(IDL.Nat64, IDL.Float64)
+    ),
+    'declining_voting_power_neuron_subset_metrics' : IDL.Opt(
+      NeuronSubsetMetrics
     ),
     'total_staked_e8s_ect' : IDL.Nat64,
     'not_dissolving_neurons_staked_maturity_e8s_equivalent_sum' : IDL.Nat64,
@@ -1109,6 +1120,7 @@ export const init = ({ IDL }) => {
   const Controllers = IDL.Record({ 'controllers' : IDL.Vec(IDL.Principal) });
   const CanisterSettings = IDL.Record({
     'freezing_threshold' : IDL.Opt(IDL.Nat64),
+    'wasm_memory_threshold' : IDL.Opt(IDL.Nat64),
     'controllers' : IDL.Opt(Controllers),
     'log_visibility' : IDL.Opt(IDL.Int32),
     'wasm_memory_limit' : IDL.Opt(IDL.Nat64),
@@ -1364,12 +1376,16 @@ export const init = ({ IDL }) => {
     'voting_power_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'total_staked_e8s' : IDL.Opt(IDL.Nat64),
     'count' : IDL.Opt(IDL.Nat64),
+    'deciding_voting_power_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'total_staked_maturity_e8s_equivalent' : IDL.Opt(IDL.Nat64),
+    'total_potential_voting_power' : IDL.Opt(IDL.Nat64),
+    'total_deciding_voting_power' : IDL.Opt(IDL.Nat64),
     'staked_maturity_e8s_equivalent_buckets' : IDL.Vec(
       IDL.Tuple(IDL.Nat64, IDL.Nat64)
     ),
     'staked_e8s_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'total_voting_power' : IDL.Opt(IDL.Nat64),
+    'potential_voting_power_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
     'count_buckets' : IDL.Vec(IDL.Tuple(IDL.Nat64, IDL.Nat64)),
   });
   const GovernanceCachedMetrics = IDL.Record({
@@ -1394,6 +1410,9 @@ export const init = ({ IDL }) => {
     'total_staked_e8s_seed' : IDL.Nat64,
     'total_staked_maturity_e8s_equivalent_ect' : IDL.Nat64,
     'total_staked_e8s' : IDL.Nat64,
+    'fully_lost_voting_power_neuron_subset_metrics' : IDL.Opt(
+      NeuronSubsetMetrics
+    ),
     'not_dissolving_neurons_count' : IDL.Nat64,
     'total_locked_e8s' : IDL.Nat64,
     'neurons_fund_total_active_neurons' : IDL.Nat64,
@@ -1403,6 +1422,9 @@ export const init = ({ IDL }) => {
     'total_staked_maturity_e8s_equivalent' : IDL.Nat64,
     'not_dissolving_neurons_e8s_buckets_ect' : IDL.Vec(
       IDL.Tuple(IDL.Nat64, IDL.Float64)
+    ),
+    'declining_voting_power_neuron_subset_metrics' : IDL.Opt(
+      NeuronSubsetMetrics
     ),
     'total_staked_e8s_ect' : IDL.Nat64,
     'not_dissolving_neurons_staked_maturity_e8s_equivalent_sum' : IDL.Nat64,

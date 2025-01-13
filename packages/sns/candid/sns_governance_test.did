@@ -1,4 +1,4 @@
-// Generated from IC repo commit d9fe207 (2024-12-06 tags: release-2024-12-06_03-16-base) 'rs/sns/governance/canister/governance_test.did' by import-candid
+// Generated from IC repo commit aa705aa (2025-01-08 tags: release-2025-01-09_03-19-base) 'rs/sns/governance/canister/governance_test.did' by import-candid
 type Account = record {
   owner : opt principal;
   subaccount : opt Subaccount;
@@ -167,6 +167,7 @@ type DefiniteCanisterSettingsArgs = record {
   wasm_memory_limit : opt nat;
   memory_allocation : nat;
   compute_allocation : nat;
+  wasm_memory_threshold : opt nat;
 };
 
 type DeregisterDappCanisters = record {
@@ -385,6 +386,7 @@ type ManageDappCanisterSettings = record {
   wasm_memory_limit : opt nat64;
   memory_allocation : opt nat64;
   compute_allocation : opt nat64;
+  wasm_memory_threshold : opt nat64;
 };
 
 type SnsVersion = record {

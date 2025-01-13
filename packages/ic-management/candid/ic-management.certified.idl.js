@@ -308,7 +308,11 @@ export const idlFactory = ({ IDL }) => {
   const sign_with_ecdsa_result = IDL.Record({
     'signature' : IDL.Vec(IDL.Nat8),
   });
+  const schnorr_aux = IDL.Variant({
+    'bip341' : IDL.Record({ 'merkle_root_hash' : IDL.Vec(IDL.Nat8) }),
+  });
   const sign_with_schnorr_args = IDL.Record({
+    'aux' : IDL.Opt(schnorr_aux),
     'key_id' : IDL.Record({
       'algorithm' : schnorr_algorithm,
       'name' : IDL.Text,

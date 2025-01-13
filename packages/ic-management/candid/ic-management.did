@@ -1,4 +1,4 @@
-// Generated from dfinity/portal commit 7b300dc97a1636f8134410e9a40f3556acf9b496 for file 'docs/references/_attachments/ic.did'
+// Generated from dfinity/portal commit aed4ac730cc662713c0353609af96bbb2cd3a8ca for file 'docs/references/_attachments/ic.did'
 type canister_id = principal;
 type wasm_module = blob;
 type snapshot_id = blob;
@@ -324,10 +324,17 @@ type schnorr_public_key_result = record {
     chain_code : blob;
 };
 
+type schnorr_aux = variant {
+    bip341: record {
+      merkle_root_hash: blob;
+   }
+};
+
 type sign_with_schnorr_args = record {
     message : blob;
     derivation_path : vec blob;
     key_id : record { algorithm : schnorr_algorithm; name : text };
+    aux: opt schnorr_aux;
 };
 
 type sign_with_schnorr_result = record {

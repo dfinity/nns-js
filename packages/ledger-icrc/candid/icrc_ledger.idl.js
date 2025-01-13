@@ -34,7 +34,6 @@ export const idlFactory = ({ IDL }) => {
     'token_symbol' : IDL.Opt(IDL.Text),
     'transfer_fee' : IDL.Opt(IDL.Nat),
     'metadata' : IDL.Opt(IDL.Vec(IDL.Tuple(IDL.Text, MetadataValue))),
-    'accounts_overflow_trim_quantity' : IDL.Opt(IDL.Nat64),
     'change_fee_collector' : IDL.Opt(ChangeFeeCollector),
     'max_memo_length' : IDL.Opt(IDL.Nat16),
     'token_name' : IDL.Opt(IDL.Text),
@@ -47,8 +46,6 @@ export const idlFactory = ({ IDL }) => {
     'metadata' : IDL.Vec(IDL.Tuple(IDL.Text, MetadataValue)),
     'minting_account' : Account,
     'initial_balances' : IDL.Vec(IDL.Tuple(Account, IDL.Nat)),
-    'maximum_number_of_accounts' : IDL.Opt(IDL.Nat64),
-    'accounts_overflow_trim_quantity' : IDL.Opt(IDL.Nat64),
     'fee_collector_account' : IDL.Opt(Account),
     'archive_options' : IDL.Record({
       'num_blocks_to_archive' : IDL.Nat64,
@@ -452,7 +449,6 @@ export const init = ({ IDL }) => {
     'token_symbol' : IDL.Opt(IDL.Text),
     'transfer_fee' : IDL.Opt(IDL.Nat),
     'metadata' : IDL.Opt(IDL.Vec(IDL.Tuple(IDL.Text, MetadataValue))),
-    'accounts_overflow_trim_quantity' : IDL.Opt(IDL.Nat64),
     'change_fee_collector' : IDL.Opt(ChangeFeeCollector),
     'max_memo_length' : IDL.Opt(IDL.Nat16),
     'token_name' : IDL.Opt(IDL.Text),
@@ -465,8 +461,6 @@ export const init = ({ IDL }) => {
     'metadata' : IDL.Vec(IDL.Tuple(IDL.Text, MetadataValue)),
     'minting_account' : Account,
     'initial_balances' : IDL.Vec(IDL.Tuple(Account, IDL.Nat)),
-    'maximum_number_of_accounts' : IDL.Opt(IDL.Nat64),
-    'accounts_overflow_trim_quantity' : IDL.Opt(IDL.Nat64),
     'fee_collector_account' : IDL.Opt(Account),
     'archive_options' : IDL.Record({
       'num_blocks_to_archive' : IDL.Nat64,

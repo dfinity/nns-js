@@ -39,7 +39,11 @@ export interface DefiniteCanisterSettings {
   memory_allocation: bigint;
   compute_allocation: bigint;
 }
-export type Event =
+export interface Event {
+  timestamp: [] | [bigint];
+  payload: EventType;
+}
+export type EventType =
   | {
       received_utxos: {
         to_account: Account;

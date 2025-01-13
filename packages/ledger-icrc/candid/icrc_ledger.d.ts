@@ -157,8 +157,6 @@ export interface InitArgs {
   metadata: Array<[string, MetadataValue]>;
   minting_account: Account;
   initial_balances: Array<[Account, bigint]>;
-  maximum_number_of_accounts: [] | [bigint];
-  accounts_overflow_trim_quantity: [] | [bigint];
   fee_collector_account: [] | [Account];
   archive_options: {
     num_blocks_to_archive: bigint;
@@ -269,7 +267,6 @@ export interface UpgradeArgs {
   token_symbol: [] | [string];
   transfer_fee: [] | [bigint];
   metadata: [] | [Array<[string, MetadataValue]>];
-  accounts_overflow_trim_quantity: [] | [bigint];
   change_fee_collector: [] | [ChangeFeeCollector];
   max_memo_length: [] | [number];
   token_name: [] | [string];

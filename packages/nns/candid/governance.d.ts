@@ -51,6 +51,7 @@ export interface Canister {
 }
 export interface CanisterSettings {
   freezing_threshold: [] | [bigint];
+  wasm_memory_threshold: [] | [bigint];
   controllers: [] | [Controllers];
   log_visibility: [] | [number];
   wasm_memory_limit: [] | [bigint];
@@ -258,12 +259,14 @@ export interface GovernanceCachedMetrics {
   total_staked_e8s_seed: bigint;
   total_staked_maturity_e8s_equivalent_ect: bigint;
   total_staked_e8s: bigint;
+  fully_lost_voting_power_neuron_subset_metrics: [] | [NeuronSubsetMetrics];
   not_dissolving_neurons_count: bigint;
   total_locked_e8s: bigint;
   neurons_fund_total_active_neurons: bigint;
   total_voting_power_non_self_authenticating_controller: [] | [bigint];
   total_staked_maturity_e8s_equivalent: bigint;
   not_dissolving_neurons_e8s_buckets_ect: Array<[bigint, number]>;
+  declining_voting_power_neuron_subset_metrics: [] | [NeuronSubsetMetrics];
   total_staked_e8s_ect: bigint;
   not_dissolving_neurons_staked_maturity_e8s_equivalent_sum: bigint;
   dissolved_neurons_e8s: bigint;
@@ -554,10 +557,14 @@ export interface NeuronSubsetMetrics {
   voting_power_buckets: Array<[bigint, bigint]>;
   total_staked_e8s: [] | [bigint];
   count: [] | [bigint];
+  deciding_voting_power_buckets: Array<[bigint, bigint]>;
   total_staked_maturity_e8s_equivalent: [] | [bigint];
+  total_potential_voting_power: [] | [bigint];
+  total_deciding_voting_power: [] | [bigint];
   staked_maturity_e8s_equivalent_buckets: Array<[bigint, bigint]>;
   staked_e8s_buckets: Array<[bigint, bigint]>;
   total_voting_power: [] | [bigint];
+  potential_voting_power_buckets: Array<[bigint, bigint]>;
   count_buckets: Array<[bigint, bigint]>;
 }
 export interface NeuronsFundAuditInfo {

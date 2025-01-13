@@ -99,7 +99,7 @@ export const idlFactory = ({ IDL }) => {
     'p2wpkh_v0' : IDL.Vec(IDL.Nat8),
     'p2pkh' : IDL.Vec(IDL.Nat8),
   });
-  const Event = IDL.Variant({
+  const EventType = IDL.Variant({
     'received_utxos' : IDL.Record({
       'to_account' : Account,
       'mint_txid' : IDL.Opt(IDL.Nat64),
@@ -170,6 +170,10 @@ export const idlFactory = ({ IDL }) => {
       'burn_block_index' : IDL.Nat64,
       'mint_block_index' : IDL.Nat64,
     }),
+  });
+  const Event = IDL.Record({
+    'timestamp' : IDL.Opt(IDL.Nat64),
+    'payload' : EventType,
   });
   const MinterInfo = IDL.Record({
     'retrieve_btc_min_amount' : IDL.Nat64,

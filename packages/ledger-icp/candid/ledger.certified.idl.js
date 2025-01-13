@@ -348,6 +348,7 @@ export const idlFactory = ({ IDL }) => {
         [TransferFromResult],
         [],
       ),
+    'is_ledger_ready' : IDL.Func([], [IDL.Bool], []),
     'name' : IDL.Func([], [IDL.Record({ 'name' : IDL.Text })], []),
     'query_blocks' : IDL.Func([GetBlocksArgs], [QueryBlocksResponse], []),
     'query_encoded_blocks' : IDL.Func(
