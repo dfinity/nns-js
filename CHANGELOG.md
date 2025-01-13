@@ -4,6 +4,7 @@
 
 - Expose types `IcrcApproveError` and `IcrcTransferFromError` in `@dfinity/ledger-icrc`.
 - Expose few additional did types in `@dfinity/ledger-icp`.
+- Add utility `fromNullishNullable` extracts the value from a nullish Candid-style variant representation.
 
 ## Fix
 

@@ -61,6 +61,7 @@ npm i @dfinity/agent @dfinity/candid @dfinity/principal
 - [toNullable](#gear-tonullable)
 - [fromNullable](#gear-fromnullable)
 - [fromDefinedNullable](#gear-fromdefinednullable)
+- [fromNullishNullable](#gear-fromnullishnullable)
 - [jsonReplacer](#gear-jsonreplacer)
 - [jsonReviver](#gear-jsonreviver)
 - [principalToSubAccount](#gear-principaltosubaccount)
@@ -371,6 +372,20 @@ Returns the current timestamp in nanoseconds as a `bigint`.
 | `fromDefinedNullable` | `<T>(value: [] or [T]) => T` |
 
 [:link: Source](https://github.com/dfinity/ic-js/tree/main/packages/utils/src/utils/did.utils.ts#L12)
+
+#### :gear: fromNullishNullable
+
+Extracts the value from a nullish Candid-style variant representation.
+
+| Function              | Type                                                   |
+| --------------------- | ------------------------------------------------------ |
+| `fromNullishNullable` | `<T>(value: [] or [T] or undefined) => T or undefined` |
+
+Parameters:
+
+- `value`: - A Candid-style variant or `undefined`.
+
+[:link: Source](https://github.com/dfinity/ic-js/tree/main/packages/utils/src/utils/did.utils.ts#L27)
 
 #### :gear: jsonReplacer
 

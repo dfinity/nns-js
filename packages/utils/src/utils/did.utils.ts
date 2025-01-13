@@ -16,3 +16,14 @@ export const fromDefinedNullable = <T>(value: [] | [T]): T => {
 
   return result;
 };
+
+/**
+ * Extracts the value from a nullish Candid-style variant representation.
+ *
+ * @template T The type of the value.
+ * @param {([] | [T]) | undefined} value - A Candid-style variant or `undefined`.
+ * @returns {T | undefined} The extracted value, or `undefined` if the input is nullish or the array is empty.
+ */
+export const fromNullishNullable = <T>(
+  value: ([] | [T]) | undefined,
+): T | undefined => fromNullable(value ?? []);
